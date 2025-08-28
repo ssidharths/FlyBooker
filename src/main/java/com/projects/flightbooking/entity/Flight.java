@@ -53,4 +53,24 @@ public class Flight {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+
+    public Flight(String flightNumber, String airline, String aircraftType,
+                  String originAirport, String destinationAirport,
+                  LocalDateTime departureTime, LocalDateTime arrivalTime,
+                  BigDecimal basePrice, Integer totalSeats) {
+        this.flightNumber = flightNumber;
+        this.airline = airline;
+        this.aircraftType = aircraftType;
+        this.originAirport = originAirport;
+        this.destinationAirport = destinationAirport;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.basePrice = basePrice;
+        this.totalSeats = totalSeats;
+        this.availableSeats = totalSeats; // all seats available initially
+        this.status = FlightStatus.SCHEDULED; // give a default status
+
+    }
+
 }
