@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +25,11 @@ public class FlightService {
     private DynamicPricingService dynamicPricingService;
 
     public List<FlightSearchResponse> searchFlights(FlightSearchRequest request) {
-        LocalDateTime departureDate = request.getDepartureDate().atStartOfDay();
-
+        LocalDate departureDate = request.getDepartureDate();
+        LocalDateTime startOfDay = departureDate.atStartOfDay(); // 2025-08-29T00:00:00
+        LocalDateTime startOfNextDay = departureDate.plusDays(1).atStartOfDay();
         List<Flight> flights = flightRepository.findAvailableFlights(request.getOrigin(),
-                request.getDestination(), departureDate, FlightStatus.SCHEDULED);
+                request.getDestination(), startOfDay, startOfNextDay, FlightStatus.SCHEDULED);
 
         return flights.stream().map(flight -> convertToFlightResponse(flight,
                 request.getTravelClass())).collect(Collectors.toList());
