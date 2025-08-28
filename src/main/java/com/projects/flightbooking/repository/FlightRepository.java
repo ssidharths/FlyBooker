@@ -15,13 +15,15 @@ import java.util.Optional;
 public interface FlightRepository extends JpaRepository<Flight,Long> {
     @Query("SELECT f from Flight f WHERE f.originAirport =:origin "+
             "AND f.destinationAirport = :destination " +
-            "AND DATE(f.departureTime) = DATE(:departureDate) "+
+            "AND f.departureTime >= :startOfDay " +
+            "AND f.departureTime < :startOfNextDay " +
             "AND f.status = :status "+
             "AND f.availableSeats > 0"+
             "ORDER BY f.departureTime")
     List<Flight> findAvailableFlights(@Param("origin") String origin,
                                       @Param("destination") String destination,
-                                      @Param("departureDate")LocalDateTime departureDate,
+                                      @Param("startOfDay")LocalDateTime startOfDay,
+                                      @Param("startOfNextDay")LocalDateTime startOfNextDay,
                                       @Param("status")FlightStatus status
                                       );
 
