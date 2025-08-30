@@ -5,7 +5,6 @@ import com.projects.flightbooking.entity.Payment;
 import com.projects.flightbooking.entity.enums.PaymentMethod;
 import com.projects.flightbooking.entity.enums.PaymentStatus;
 import com.projects.flightbooking.repository.PaymentRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +17,10 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public Payment createPayment(Booking booking, PaymentMethod paymentMethod) {
+    public void createPayment(Booking booking, PaymentMethod paymentMethod) {
         String transactionId = generateTransactionId();
         Payment payment = new Payment(transactionId, booking.getTotalAmount(), paymentMethod, booking);
-        return paymentRepository.save(payment);
+        paymentRepository.save(payment);
     }
 
     public Optional<Payment> getPaymentByTransactionId(String transactionId) {
@@ -40,8 +39,8 @@ public class PaymentService {
         }
         Payment payment = paymentOpt.get();
         //We are not implementing any payment processors here for the sake of simplicity.
-        // It simply checks if the generated random number is less than 0.95
-        // This mimics the 95% of the cases, payment getting successful and 5% failure
+        //It simply checks if the generated random number is less than 0.95
+        //This mimics the 95% of the cases, payment getting successful and 5% failure
         boolean paymentSuccessful = simulatePaymentProcessing();
         if (paymentSuccessful) {
             payment.setPaymentStatus(PaymentStatus.COMPLETED);

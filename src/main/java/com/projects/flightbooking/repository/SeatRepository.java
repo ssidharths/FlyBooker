@@ -27,4 +27,5 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM Seat s WHERE s.id = :seatId")
     Optional<Seat> findByIdWithLock(@Param("seatId") Long seatId);
+    //PESSIMISTIC_WRITE allows us to obtain an exclusive lock and prevent the data from being read, updated or deleted.
 }
