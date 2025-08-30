@@ -34,9 +34,10 @@ public class SeatService {
         return seatRepository.findById(id);
     }
 
-    public boolean isSeatAvailable(Long seatId){
-        Optional<Seat> seat = seatRepository.findById(seatId);
-        return seat.isPresent() && seat.get().getStatus()==SeatStatus.AVAILABLE;
+
+    public boolean isSeatAvailable(Long seatId) {
+        Optional<Seat> seat = seatRepository.findByIdWithLock(seatId);
+        return seat.isPresent() && seat.get().getStatus() == SeatStatus.AVAILABLE;
     }
 
     public void reserveSeats(List<Long> seatIds) {
