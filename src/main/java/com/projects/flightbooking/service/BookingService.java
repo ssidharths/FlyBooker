@@ -13,7 +13,8 @@ import com.projects.flightbooking.repository.BookingSeatRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
+    private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired
@@ -35,6 +37,7 @@ public class BookingService {
 
     @Transactional
     public BookingResponse createBooking(BookingRequest request) {
+        logger.info("f::Booking initiated for {} by {}::",request.getFlightId() ,request.getPassengerEmail());
         Optional<Flight> flightOpt = flightService.getFlightById(request.getFlightId());
         if (flightOpt.isEmpty()) {
             throw new RuntimeException("Flight Not Found");
@@ -68,6 +71,7 @@ public class BookingService {
         flightService.updateAvailableSeats(retrievedFlight.getId(), -request.getSeatIds().size());
         // Create payment record
         paymentService.createPayment(booking, PaymentMethod.valueOf(request.getPaymentMethod().toUpperCase()));
+        logger.info("::Booking success. Exiting service::");
         return convertToBookingResponse(booking);
     }
 
@@ -88,6 +92,7 @@ public class BookingService {
             throw new RuntimeException("Booking not found");
         }
         Booking booking = bookingOpt.get();
+        logger.info("f::Cancel initiated for {} by {}::",booking.getFlight(),booking.getPassengerEmail());
         booking.setStatus(BookingStatus.CANCELLED);
         // Release seats
         List<BookingSeat> bookingSeats = bookingSeatRepository.findByBookingId(booking.getId());
@@ -96,6 +101,7 @@ public class BookingService {
         // Update flight available seats
         flightService.updateAvailableSeats(booking.getFlight().getId(), seatIds.size());
         bookingRepository.save(booking);
+        logger.info("f::Cancel success for {} by {}::",booking.getFlight(),booking.getPassengerEmail());
     }
 
     private BookingResponse convertToBookingResponse(Booking booking) {
