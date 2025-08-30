@@ -5,22 +5,33 @@ import com.projects.flightbooking.entity.Payment;
 import com.projects.flightbooking.entity.enums.PaymentMethod;
 import com.projects.flightbooking.entity.enums.PaymentStatus;
 import com.projects.flightbooking.repository.PaymentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class PaymentService {
+    private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public void createPayment(Booking booking, PaymentMethod paymentMethod) {
+    public Payment createPayment(Booking booking, PaymentMethod paymentMethod) {
         String transactionId = generateTransactionId();
         Payment payment = new Payment(transactionId, booking.getTotalAmount(), paymentMethod, booking);
         paymentRepository.save(payment);
+        return payment;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Payment processPaymentInNewTransaction(String transactionId) {
+        return processPayment(transactionId);
     }
 
     public Optional<Payment> getPaymentByTransactionId(String transactionId) {
@@ -44,10 +55,13 @@ public class PaymentService {
         boolean paymentSuccessful = simulatePaymentProcessing();
         if (paymentSuccessful) {
             payment.setPaymentStatus(PaymentStatus.COMPLETED);
+            logger.info("Payment {} processed successfully", transactionId);
         } else {
             payment.setPaymentStatus(PaymentStatus.FAILED);
+            logger.warn("Payment {} failed to process", transactionId);
         }
-        return paymentRepository.save(payment);
+        Payment savedPayment = paymentRepository.save(payment);
+        return savedPayment;
     }
 
     private String generateTransactionId() {

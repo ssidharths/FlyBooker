@@ -2,12 +2,11 @@ package com.projects.flightbooking.service;
 
 import com.projects.flightbooking.dto.booking.BookingRequest;
 import com.projects.flightbooking.dto.booking.BookingResponse;
-import com.projects.flightbooking.entity.Booking;
-import com.projects.flightbooking.entity.BookingSeat;
-import com.projects.flightbooking.entity.Flight;
-import com.projects.flightbooking.entity.Seat;
+import com.projects.flightbooking.entity.*;
 import com.projects.flightbooking.entity.enums.BookingStatus;
 import com.projects.flightbooking.entity.enums.PaymentMethod;
+import com.projects.flightbooking.entity.enums.PaymentStatus;
+import com.projects.flightbooking.exception.PaymentFailedException;
 import com.projects.flightbooking.repository.BookingRepository;
 import com.projects.flightbooking.repository.BookingSeatRepository;
 import jakarta.transaction.Transactional;
@@ -70,7 +69,26 @@ public class BookingService {
         // Update flight available seats
         flightService.updateAvailableSeats(retrievedFlight.getId(), -request.getSeatIds().size());
         // Create payment record
-        paymentService.createPayment(booking, PaymentMethod.valueOf(request.getPaymentMethod().toUpperCase()));
+        Payment payment = paymentService.createPayment(booking, PaymentMethod.valueOf(request.getPaymentMethod().toUpperCase()));
+
+        // Process payment in a separate transaction
+        try {
+            paymentService.processPaymentInNewTransaction(payment.getTransactionId());
+        } catch (Exception e) {
+            // Payment failed - clean up and notify
+            booking.setStatus(BookingStatus.CANCELLED);
+            bookingRepository.save(booking);
+            // Release seats
+            seatService.releaseSeats(request.getSeatIds());
+            flightService.updateAvailableSeats(booking.getFlight().getId(), request.getSeatIds().size());
+            logger.error("::Payment Failed for {}::",booking.getPassengerEmail());
+            // Notify of payment failure
+            throw new PaymentFailedException("Payment processing failed: " + e.getMessage());
+        }
+
+        // Update booking status based on payment result
+        booking.setStatus(BookingStatus.CONFIRMED);
+        bookingRepository.save(booking);
         logger.info("::Booking success. Exiting service::");
         return convertToBookingResponse(booking);
     }

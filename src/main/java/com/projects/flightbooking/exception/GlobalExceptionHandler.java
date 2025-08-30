@@ -36,4 +36,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<Map<String, Object>> handlePaymentFailedException(PaymentFailedException ex, WebRequest request) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("error_code", "PAYMENT_FAILED");
+        errorDetails.put("details", request.getDescription(false));
+        errorDetails.put("status", HttpStatus.PAYMENT_REQUIRED.value());
+        return new ResponseEntity<>(errorDetails, HttpStatus.PAYMENT_REQUIRED);
+    }
+
 }
