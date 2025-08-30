@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fb/v1/flights/")
+@RequestMapping("/flights/")
 public class FlightController {
     @Autowired
     private FlightService flightService;

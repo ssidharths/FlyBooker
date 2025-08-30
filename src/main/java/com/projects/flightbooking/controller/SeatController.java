@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fb/v1/seats")
+@RequestMapping("/seats")
 @Tag(name = "Seat Management", description = "APIs for seat selection and management")
 public class SeatController {
 
