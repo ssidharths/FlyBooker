@@ -27,6 +27,10 @@ public class Booking {
     private String bookingReference;
     @Column(nullable=false)
     private String passengerName;
+    @Column(nullable = false)
+    private String passengerEmail;
+    @Column(nullable = false)
+    private String passengerPhone;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
     @Enumerated(EnumType.STRING)
@@ -42,4 +46,13 @@ public class Booking {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public Booking(String bookingReference, String passengerName, String passengerEmail, String passengerPhone, BigDecimal totalAmount, Flight flight) {
+        this.bookingReference = bookingReference;
+        this.passengerName = passengerName;
+        this.passengerEmail = passengerEmail;
+        this.passengerPhone = passengerPhone;
+        this.totalAmount = totalAmount;
+        this.flight = flight;
+    }
 }

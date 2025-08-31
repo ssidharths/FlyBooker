@@ -35,4 +35,11 @@ public class Payment {
     private Booking booking;
     @CreatedDate
     private LocalDateTime createdAt;
+
+    public Payment(String transactionId, BigDecimal amount, PaymentMethod paymentMethod, Booking booking) {
+        this.transactionId = transactionId;
+        this.amount = amount;
+        this.paymentMethod = paymentMethod;
+        this.booking = booking;
+    }
 }
