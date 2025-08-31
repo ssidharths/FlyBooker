@@ -29,6 +29,9 @@ public class PaymentService {
         return payment;
     }
 
+    //Payment processing failure shouldn't roll back the entire booking transaction, hence the
+    //separation transaction.We can also record the booking as CANCELLED even if payment fails.
+    //REQUIRES_NEW propagation so payment processing doesn't affect the main booking transaction.
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Payment processPaymentInNewTransaction(String transactionId) {
         return processPayment(transactionId);
