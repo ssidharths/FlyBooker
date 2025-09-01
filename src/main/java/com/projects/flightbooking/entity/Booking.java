@@ -38,7 +38,7 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="flight_id", nullable = false)
     private Flight flight;
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BookingSeat> bookingSeats;
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
     private Payment payment;

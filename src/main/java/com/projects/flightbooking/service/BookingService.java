@@ -5,7 +5,6 @@ import com.projects.flightbooking.dto.booking.BookingResponse;
 import com.projects.flightbooking.entity.*;
 import com.projects.flightbooking.entity.enums.BookingStatus;
 import com.projects.flightbooking.entity.enums.PaymentMethod;
-import com.projects.flightbooking.entity.enums.PaymentStatus;
 import com.projects.flightbooking.exception.PaymentFailedException;
 import com.projects.flightbooking.repository.BookingRepository;
 import com.projects.flightbooking.repository.BookingSeatRepository;
@@ -52,7 +51,11 @@ public class BookingService {
         BigDecimal totalAmount = calculateTotalAmount(request.getSeatIds(), retrievedFlight);
         String bookingReference = generateBookingReference();
 
-        Booking booking = new Booking(bookingReference, request.getPassengerName(), request.getPassengerEmail(), request.getPassengerPhone(), totalAmount, retrievedFlight);
+        // Create booking with PENDING status
+        Booking booking = new Booking(bookingReference, request.getPassengerName(),
+                request.getPassengerEmail(), request.getPassengerPhone(),
+                totalAmount, retrievedFlight);
+        booking.setStatus(BookingStatus.PENDING);
         booking = bookingRepository.save(booking);
 
         // Reserve seats
@@ -68,28 +71,10 @@ public class BookingService {
         }
         // Update flight available seats
         flightService.updateAvailableSeats(retrievedFlight.getId(), -request.getSeatIds().size());
-        // Create payment record
+        // Create payment record with PENDING status
         Payment payment = paymentService.createPayment(booking, PaymentMethod.valueOf(request.getPaymentMethod().toUpperCase()));
-
-        // Process payment in a separate transaction
-        try {
-            paymentService.processPaymentInNewTransaction(payment.getTransactionId());
-        } catch (Exception e) {
-            // Payment failed - clean up and notify
-            booking.setStatus(BookingStatus.CANCELLED);
-            bookingRepository.save(booking);
-            // Release seats
-            seatService.releaseSeats(request.getSeatIds());
-            flightService.updateAvailableSeats(booking.getFlight().getId(), request.getSeatIds().size());
-            logger.error("::Payment Failed for {}::",booking.getPassengerEmail());
-            // Notify of payment failure
-            throw new PaymentFailedException("Payment processing failed: " + e.getMessage());
-        }
-
-        // Update booking status based on payment result
-        booking.setStatus(BookingStatus.CONFIRMED);
-        bookingRepository.save(booking);
-        logger.info("::Booking success. Exiting service::");
+        logger.info("::Booking created successfully with PENDING status. Payment ID: {}::", payment.getTransactionId());
+        logger.info("::Payment will be processed by scheduled job::");
         return convertToBookingResponse(booking);
     }
 
@@ -140,6 +125,14 @@ public class BookingService {
         List<BookingSeat> bookingSeats = bookingSeatRepository.findByBookingId(booking.getId());
         List<String> seatNumbers = bookingSeats.stream().map(bs -> bs.getSeat().getSeatNumber()).collect(Collectors.toList());
         response.setSeatNumbers(seatNumbers);
+
+        // Add payment status
+        // Fix: Get payment status correctly
+        Optional<Payment> paymentOpt = paymentService.getPaymentByBookingId(booking.getId());
+        String paymentStatus = paymentOpt
+                .map(p -> p.getPaymentStatus().toString())
+                .orElse("PENDING");
+        response.setPaymentStatus(paymentStatus);
         return response;
     }
 

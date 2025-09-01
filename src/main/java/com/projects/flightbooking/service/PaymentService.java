@@ -22,19 +22,50 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public Payment createPayment(Booking booking, PaymentMethod paymentMethod) {
+    public Payment createPayment(Booking booking, PaymentMethod method) {
         String transactionId = generateTransactionId();
-        Payment payment = new Payment(transactionId, booking.getTotalAmount(), paymentMethod, booking);
-        paymentRepository.save(payment);
-        return payment;
+
+        // Start with PENDING status
+        Payment payment = new Payment(
+                        transactionId,
+                        booking.getTotalAmount(),
+                        method,
+                        booking,
+                        PaymentStatus.PENDING
+                );
+
+        return paymentRepository.save(payment);
     }
 
     //Payment processing failure shouldn't roll back the entire booking transaction, hence the
     //separation transaction.We can also record the booking as CANCELLED even if payment fails.
     //REQUIRES_NEW propagation so payment processing doesn't affect the main booking transaction.
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Payment processPaymentInNewTransaction(String transactionId) {
-        return processPayment(transactionId);
+    public Payment processPayment(String transactionId) {
+        Optional<Payment> paymentOpt = paymentRepository.findByTransactionId(transactionId);
+        if (paymentOpt.isEmpty()) {
+            throw new RuntimeException("Payment not found");
+        }
+        Payment payment = paymentOpt.get();
+
+        logger.info("Processing payment {} for amount {}", transactionId, payment.getAmount());
+
+        // Simulate payment processing
+        boolean paymentSuccessful = simulatePaymentProcessing();
+        logger.info("Payment successful: {}", paymentSuccessful);
+
+        if (paymentSuccessful) {
+            payment.setPaymentStatus(PaymentStatus.COMPLETED);
+            logger.info("Payment set to COMPLETED");
+        } else {
+            payment.setPaymentStatus(PaymentStatus.FAILED);
+            logger.info("Payment set to FAILED");
+        }
+
+        Payment savedPayment = paymentRepository.save(payment);
+        logger.info("Payment saved with status: {}", savedPayment.getPaymentStatus());
+
+        return savedPayment;
     }
 
     public Optional<Payment> getPaymentByTransactionId(String transactionId) {
@@ -44,27 +75,6 @@ public class PaymentService {
 
     public Optional<Payment> getPaymentByBookingId(Long bookingId) {
         return paymentRepository.findByBookingId(bookingId);
-    }
-
-    public Payment processPayment(String transactionId) {
-        Optional<Payment> paymentOpt = paymentRepository.findByTransactionId(transactionId);
-        if (paymentOpt.isEmpty()) {
-            throw new RuntimeException("Payment not found");
-        }
-        Payment payment = paymentOpt.get();
-        //We are not implementing any payment processors here for the sake of simplicity.
-        //It simply checks if the generated random number is less than 0.95
-        //This mimics the 95% of the cases, payment getting successful and 5% failure
-        boolean paymentSuccessful = simulatePaymentProcessing();
-        if (paymentSuccessful) {
-            payment.setPaymentStatus(PaymentStatus.COMPLETED);
-            logger.info("Payment {} processed successfully", transactionId);
-        } else {
-            payment.setPaymentStatus(PaymentStatus.FAILED);
-            logger.warn("Payment {} failed to process", transactionId);
-        }
-        Payment savedPayment = paymentRepository.save(payment);
-        return savedPayment;
     }
 
     private String generateTransactionId() {

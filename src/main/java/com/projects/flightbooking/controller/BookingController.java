@@ -2,10 +2,12 @@ package com.projects.flightbooking.controller;
 
 import com.projects.flightbooking.dto.booking.BookingRequest;
 import com.projects.flightbooking.dto.booking.BookingResponse;
+import com.projects.flightbooking.exception.PaymentFailedException;
 import com.projects.flightbooking.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +24,17 @@ public class BookingController {
     @PostMapping
     @Operation(summary = "Book Ticket", description = "Book seat/s for a specific flight")
     public ResponseEntity<BookingResponse> createBooking(@RequestBody BookingRequest request) {
-        try {
-            BookingResponse booking = bookingService.createBooking(request);
-            return ResponseEntity.ok(booking);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            try {
+                BookingResponse booking = bookingService.createBooking(request);
+                return ResponseEntity.ok(booking);
+            } catch (PaymentFailedException e) {
+                return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED)
+                        .body(null);
+            } catch (RuntimeException e) {
+                return ResponseEntity.badRequest()
+                        .body(null);
+            }
         }
-    }
 
     @GetMapping("/{bookingReference}")
     @Operation(summary = "Get Booking By ReferenceId", description = "Retrieve the booking info by the given referenceId")

@@ -47,4 +47,5 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.PAYMENT_REQUIRED);
     }
 
+
 }

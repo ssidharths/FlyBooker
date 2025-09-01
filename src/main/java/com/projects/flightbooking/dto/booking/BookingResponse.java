@@ -23,4 +23,5 @@ public class BookingResponse {
     private LocalDateTime arrivalTime;
     private List<String> seatNumbers;
     private LocalDateTime createdAt;
+    private String paymentStatus;
 }

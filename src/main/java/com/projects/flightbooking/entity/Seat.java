@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name="seats")
 public class Seat {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,10 +28,17 @@ public class Seat {
     @Column(precision = 10, scale = 2)
     private BigDecimal additionalFee;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "flight_id", nullable = false)
     private Flight flight;
 
     @OneToOne(mappedBy = "seat", cascade = CascadeType.ALL)
     private BookingSeat bookingSeat;
+
+    public Seat(String seatNumber, SeatClass seatClass, BigDecimal additionalFee, Flight flight) {
+        this.seatNumber = seatNumber;
+        this.seatClass = seatClass;
+        this.additionalFee = additionalFee;
+        this.flight = flight;
+    }
 }

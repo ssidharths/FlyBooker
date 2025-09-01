@@ -30,16 +30,17 @@ public class Payment {
     private PaymentStatus paymentStatus;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="booking_id", nullable = false)
     private Booking booking;
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Payment(String transactionId, BigDecimal amount, PaymentMethod paymentMethod, Booking booking) {
+    public Payment(String transactionId, BigDecimal amount, PaymentMethod paymentMethod, Booking booking, PaymentStatus paymentStatus) {
         this.transactionId = transactionId;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
         this.booking = booking;
+        this.paymentStatus = paymentStatus;
     }
 }

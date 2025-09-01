@@ -16,7 +16,7 @@ public class BookingSeat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="booking_id", nullable = false)
     private Booking booking;
 
@@ -25,7 +25,7 @@ public class BookingSeat {
         this.seat = seat;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="seat_id", nullable = false)
     private Seat seat;
 }
