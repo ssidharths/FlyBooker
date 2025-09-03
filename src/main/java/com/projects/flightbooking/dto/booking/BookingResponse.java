@@ -15,6 +15,7 @@ public class BookingResponse {
     private String bookingReference;
     private String passengerName;
     private String passengerEmail;
+    private String passengerPhone;
     private BigDecimal totalAmount;
     private BookingStatus status;
     private String flightNumber;

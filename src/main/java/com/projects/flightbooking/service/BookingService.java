@@ -113,6 +113,7 @@ public class BookingService {
         response.setBookingReference(booking.getBookingReference());
         response.setPassengerName(booking.getPassengerName());
         response.setPassengerEmail(booking.getPassengerEmail());
+        response.setPassengerPhone(booking.getPassengerPhone());
         response.setTotalAmount(booking.getTotalAmount());
         response.setStatus(booking.getStatus());
         response.setFlightNumber(booking.getFlight().getFlightNumber());
