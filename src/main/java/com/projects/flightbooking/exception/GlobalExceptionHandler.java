@@ -21,7 +21,6 @@ public class GlobalExceptionHandler {
         errorDetails.put("message", ex.getMessage());
         errorDetails.put("details", request.getDescription(false));
         errorDetails.put("status", HttpStatus.BAD_REQUEST.value());
-
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
@@ -32,7 +31,6 @@ public class GlobalExceptionHandler {
         errorDetails.put("message", "Internal server error");
         errorDetails.put("details", request.getDescription(false));
         errorDetails.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -46,6 +44,4 @@ public class GlobalExceptionHandler {
         errorDetails.put("status", HttpStatus.PAYMENT_REQUIRED.value());
         return new ResponseEntity<>(errorDetails, HttpStatus.PAYMENT_REQUIRED);
     }
-
-
 }
