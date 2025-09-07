@@ -5,7 +5,6 @@ import com.projects.flightbooking.dto.booking.BookingResponse;
 import com.projects.flightbooking.entity.*;
 import com.projects.flightbooking.entity.enums.BookingStatus;
 import com.projects.flightbooking.entity.enums.PaymentMethod;
-import com.projects.flightbooking.exception.PaymentFailedException;
 import com.projects.flightbooking.repository.BookingRepository;
 import com.projects.flightbooking.repository.BookingSeatRepository;
 import jakarta.transaction.Transactional;
@@ -35,7 +34,7 @@ public class BookingService {
 
     @Transactional
     public BookingResponse createBooking(BookingRequest request) {
-        logger.info("f::Booking initiated for {} by {}::",request.getFlightId() ,request.getPassengerEmail());
+        logger.info("::Booking initiated by {}::" ,request.getPassengerEmail());
         Optional<Flight> flightOpt = flightService.getFlightById(request.getFlightId());
         if (flightOpt.isEmpty()) {
             throw new RuntimeException("Flight Not Found");

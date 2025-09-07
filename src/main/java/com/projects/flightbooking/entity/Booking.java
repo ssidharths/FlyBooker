@@ -54,5 +54,6 @@ public class Booking {
         this.passengerPhone = passengerPhone;
         this.totalAmount = totalAmount;
         this.flight = flight;
+        this.createdAt = LocalDateTime.now();
     }
 }

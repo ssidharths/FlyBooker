@@ -125,7 +125,6 @@ public class DataInitializer implements CommandLineRunner {
                     additionalFee = new BigDecimal("50.00");
                 } else {
                     seatClass = SeatClass.ECONOMY;
-                    additionalFee = BigDecimal.ZERO;
                 }
                 Seat seat = new Seat(seatNumber, seatClass, additionalFee, flight);
                 seat.setStatus(SeatStatus.AVAILABLE);
