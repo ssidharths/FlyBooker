@@ -7,6 +7,9 @@ import com.projects.flightbooking.entity.enums.SeatClass;
 import com.projects.flightbooking.entity.enums.SeatStatus;
 import com.projects.flightbooking.repository.FlightRepository;
 import com.projects.flightbooking.repository.SeatRepository;
+import com.projects.flightbooking.service.BookingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
+    private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
 
     @Autowired
     private FlightRepository flightRepository;
@@ -34,7 +38,7 @@ public class DataInitializer implements CommandLineRunner {
     public void initializeFlights() {
         if (flightRepository.count() == 0) {
             // Starting out fresh. Create some flights manually
-            // Please note this is for testing purposes only
+            // Please note this is for TESTING PURPOSES ONLY
 
             Flight flight1 = new Flight(
                     "ADY131",
@@ -91,6 +95,185 @@ public class DataInitializer implements CommandLineRunner {
                     new BigDecimal(68000),
                     90
             );
+            Flight flight6 = new Flight(
+                    "QTR507",
+                    "Qatar Airways",
+                    "Airbus A359",
+                    "DOH",
+                    "DEL",
+                    LocalDateTime.now().plusDays(2).withHour(2).withMinute(45),
+                    LocalDateTime.now().plusDays(2).withHour(9).withMinute(55),
+                    new BigDecimal("72000.00"),
+                    90
+            );
+
+            Flight flight7 = new Flight(
+                    "SIA471",
+                    "Singapore Airlines",
+                    "Boeing B789",
+                    "SIN",
+                    "MAA",
+                    LocalDateTime.now().plusDays(1).withHour(23).withMinute(15),
+                    LocalDateTime.now().plusDays(2).withHour(5).withMinute(40),
+                    new BigDecimal("54000.00"),
+                    90
+            );
+
+            Flight flight8 = new Flight(
+                    "BA138",
+                    "British Airways",
+                    "Boeing B789",
+                    "LHR",
+                    "BLR",
+                    LocalDateTime.now().plusDays(3).withHour(10).withMinute(45),
+                    LocalDateTime.now().plusDays(3).withHour(23).withMinute(5),
+                    new BigDecimal("89000.00"),
+                    90
+            );
+
+            Flight flight9 = new Flight(
+                    "AIC102",
+                    "Air India",
+                    "Boeing B77W",
+                    "JFK",
+                    "DEL",
+                    LocalDateTime.now().plusDays(1).withHour(21).withMinute(30),
+                    LocalDateTime.now().plusDays(2).withHour(20).withMinute(15),
+                    new BigDecimal("102000.00"),
+                    90
+            );
+
+            Flight flight10 = new Flight(
+                    "ETD565",
+                    "Etihad Airways",
+                    "Boeing B789",
+                    "AUH",
+                    "COK",
+                    LocalDateTime.now().plusDays(2).withHour(16).withMinute(25),
+                    LocalDateTime.now().plusDays(2).withHour(22).withMinute(5),
+                    new BigDecimal("65000.00"),
+                    90
+            );
+            Flight flight11 = new Flight(
+                    "IGO341",
+                    "IndiGo",
+                    "Airbus A320",
+                    "BLR",
+                    "CCU",
+                    LocalDateTime.now().plusDays(1).withHour(6).withMinute(10),
+                    LocalDateTime.now().plusDays(1).withHour(9).withMinute(0),
+                    new BigDecimal("4800.00"),
+                    90
+            );
+
+            Flight flight12 = new Flight(
+                    "AIC673",
+                    "Air India",
+                    "Airbus A321",
+                    "DEL",
+                    "MAA",
+                    LocalDateTime.now().plusDays(2).withHour(12).withMinute(45),
+                    LocalDateTime.now().plusDays(2).withHour(15).withMinute(55),
+                    new BigDecimal("7200.00"),
+                    90
+            );
+
+            Flight flight13 = new Flight(
+                    "SIA233",
+                    "Singapore Airlines",
+                    "Airbus A359",
+                    "SIN",
+                    "COK",
+                    LocalDateTime.now().plusDays(3).withHour(9).withMinute(30),
+                    LocalDateTime.now().plusDays(3).withHour(15).withMinute(45),
+                    new BigDecimal("56000.00"),
+                    90
+            );
+
+            Flight flight14 = new Flight(
+                    "CPA712",
+                    "Cathay Pacific",
+                    "Boeing B77W",
+                    "HKG",
+                    "HYD",
+                    LocalDateTime.now().plusDays(2).withHour(23).withMinute(20),
+                    LocalDateTime.now().plusDays(3).withHour(4).withMinute(50),
+                    new BigDecimal("64000.00"),
+                    90
+            );
+
+            Flight flight15 = new Flight(
+                    "AF225",
+                    "Air France",
+                    "Boeing B789",
+                    "CDG",
+                    "DEL",
+                    LocalDateTime.now().plusDays(5).withHour(10).withMinute(15),
+                    LocalDateTime.now().plusDays(5).withHour(23).withMinute(25),
+                    new BigDecimal("95000.00"),
+                    90
+            );
+
+            Flight flight16 = new Flight(
+                    "LH763",
+                    "Lufthansa",
+                    "Airbus A388",
+                    "FRA",
+                    "BOM",
+                    LocalDateTime.now().plusDays(4).withHour(13).withMinute(40),
+                    LocalDateTime.now().plusDays(4).withHour(23).withMinute(55),
+                    new BigDecimal("99000.00"),
+                    90
+            );
+
+            Flight flight17 = new Flight(
+                    "QFA2",
+                    "Qantas",
+                    "Boeing B789",
+                    "SYD",
+                    "LHR",
+                    LocalDateTime.now().plusDays(6).withHour(18).withMinute(0),
+                    LocalDateTime.now().plusDays(7).withHour(7).withMinute(30),
+                    new BigDecimal("132000.00"),
+                    90
+            );
+
+            Flight flight18 = new Flight(
+                    "UAL870",
+                    "United Airlines",
+                    "Boeing B789",
+                    "SFO",
+                    "DEL",
+                    LocalDateTime.now().plusDays(3).withHour(20).withMinute(25),
+                    LocalDateTime.now().plusDays(4).withHour(2).withMinute(55),
+                    new BigDecimal("118000.00"),
+                    90
+            );
+
+            Flight flight19 = new Flight(
+                    "AIC174",
+                    "Air India",
+                    "Boeing B788",
+                    "CCU",
+                    "LHR",
+                    LocalDateTime.now().plusDays(7).withHour(2).withMinute(50),
+                    LocalDateTime.now().plusDays(7).withHour(11).withMinute(30),
+                    new BigDecimal("87000.00"),
+                    90
+            );
+
+            Flight flight20 = new Flight(
+                    "DL40",
+                    "Delta Airlines",
+                    "Airbus A333",
+                    "JFK",
+                    "AMS",
+                    LocalDateTime.now().plusDays(2).withHour(22).withMinute(15),
+                    LocalDateTime.now().plusDays(3).withHour(11).withMinute(10),
+                    new BigDecimal("92000.00"),
+                    90
+            );
+
             List<Flight> flights = new ArrayList<>(
                     Arrays.asList(flight1, flight2, flight3, flight4, flight5)
             );
@@ -101,7 +284,7 @@ public class DataInitializer implements CommandLineRunner {
             for (Flight savedFlight : savedFlights) {
                 initializeSeatsForFlight(savedFlight);
             }
-            System.out.println("SAVED ALL FLIGHTS WITH SEATS");
+            logger.info("--- ALL FLIGHTS INITIALIZED ---");
         }
     }
 

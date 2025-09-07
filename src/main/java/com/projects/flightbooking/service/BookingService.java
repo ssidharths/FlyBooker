@@ -127,7 +127,6 @@ public class BookingService {
         response.setSeatNumbers(seatNumbers);
 
         // Add payment status
-        // Fix: Get payment status correctly
         Optional<Payment> paymentOpt = paymentService.getPaymentByBookingId(booking.getId());
         String paymentStatus = paymentOpt
                 .map(p -> p.getPaymentStatus().toString())
