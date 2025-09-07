@@ -30,7 +30,7 @@ public class SeatController {
 
     @GetMapping("/flight/{flightId}/available")
     @Operation(summary = "Get available seats", description = "Retrieve available seats for a specific flight")
-    public ResponseEntity<List<SeatResponse>> getAvailableSeats(@PathVariable Long flightId){
+    public ResponseEntity<List<SeatResponse>> getAvailableSeats(@PathVariable Long flightId) {
         List<SeatResponse> seats = seatService.getAvailableSeats(flightId);
         return ResponseEntity.ok(seats);
     }

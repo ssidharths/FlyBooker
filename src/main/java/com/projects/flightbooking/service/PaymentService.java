@@ -27,12 +27,12 @@ public class PaymentService {
 
         // Start with PENDING status
         Payment payment = new Payment(
-                        transactionId,
-                        booking.getTotalAmount(),
-                        method,
-                        booking,
-                        PaymentStatus.PENDING
-                );
+                transactionId,
+                booking.getTotalAmount(),
+                method,
+                booking,
+                PaymentStatus.PENDING
+        );
 
         return paymentRepository.save(payment);
     }

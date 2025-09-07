@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class BookingService {
 
     @Transactional
     public BookingResponse createBooking(BookingRequest request) {
-        logger.info("::Booking initiated by {}::" ,request.getPassengerEmail());
+        logger.info("::Booking initiated by {}::", request.getPassengerEmail());
         Optional<Flight> flightOpt = flightService.getFlightById(request.getFlightId());
         if (flightOpt.isEmpty()) {
             throw new RuntimeException("Flight Not Found");
@@ -94,7 +95,7 @@ public class BookingService {
             throw new RuntimeException("Booking not found");
         }
         Booking booking = bookingOpt.get();
-        logger.info("f::Cancel initiated for {} by {}::",booking.getFlight(),booking.getPassengerEmail());
+        logger.info("f::Cancel initiated for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
         booking.setStatus(BookingStatus.CANCELLED);
         // Release seats
         List<BookingSeat> bookingSeats = bookingSeatRepository.findByBookingId(booking.getId());
@@ -103,7 +104,7 @@ public class BookingService {
         // Update flight available seats
         flightService.updateAvailableSeats(booking.getFlight().getId(), seatIds.size());
         bookingRepository.save(booking);
-        logger.info("f::Cancel success for {} by {}::",booking.getFlight(),booking.getPassengerEmail());
+        logger.info("f::Cancel success for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
     }
 
     private BookingResponse convertToBookingResponse(Booking booking) {

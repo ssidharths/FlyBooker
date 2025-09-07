@@ -16,14 +16,14 @@ public class SeatService {
     @Autowired
     private SeatRepository seatRepository;
 
-    public List<SeatResponse> getSeatsForFlight(Long flightId){
+    public List<SeatResponse> getSeatsForFlight(Long flightId) {
         List<Seat> seats = seatRepository.findByFlightIdOrderBySeatNumber(flightId);
         return seats.stream()
                 .map(this::convertToSeatResponse)
                 .collect(Collectors.toList());
     }
 
-    public List<SeatResponse> getAvailableSeats(Long flightId){
+    public List<SeatResponse> getAvailableSeats(Long flightId) {
         List<Seat> seats = seatRepository.findByFlightIdAndStatus(flightId, SeatStatus.AVAILABLE);
         return seats.stream()
                 .map(this::convertToSeatResponse)

@@ -24,14 +24,14 @@ public class Payment {
     private Long id;
     @Column(nullable = false, unique = true)
     private String transactionId;
-    @Column(nullable = false, precision = 10, scale =2)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="booking_id", nullable = false)
+    @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
     @CreatedDate
     private LocalDateTime createdAt;
@@ -42,5 +42,6 @@ public class Payment {
         this.paymentMethod = paymentMethod;
         this.booking = booking;
         this.paymentStatus = paymentStatus;
+        this.createdAt = LocalDateTime.now();
     }
 }

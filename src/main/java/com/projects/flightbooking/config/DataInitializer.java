@@ -275,9 +275,9 @@ public class DataInitializer implements CommandLineRunner {
             );
 
             List<Flight> flights = new ArrayList<>(
-                    Arrays.asList(flight1, flight2, flight3, flight4, flight5,flight6,flight7,flight8,flight9,
-                            flight10,flight11,flight12,flight13,flight14,flight15,flight16, flight17,flight18,
-                            flight19,flight20)
+                    Arrays.asList(flight1, flight2, flight3, flight4, flight5, flight6, flight7, flight8, flight9,
+                            flight10, flight11, flight12, flight13, flight14, flight15, flight16, flight17, flight18,
+                            flight19, flight20)
             );
             // Save flights and capture returned persisted flights with IDs
             List<Flight> savedFlights = flightRepository.saveAll(flights);
