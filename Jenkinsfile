@@ -43,10 +43,16 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def image = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
-                        docker.withRegistry("", 'docker-registry-credentials') {
-                        image.push()
-                        image.push('latest')
+                    sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
+                    sh "docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${IMAGE_NAME}:latest"
+                    // Secure login with --password-stdin
+                    withCredentials([usernamePassword(credentialsId: 'docker-registry-credentials',
+                                     passwordVariable: 'DOCKER_TOKEN',
+                                     usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
+                        sh "docker push ${IMAGE_NAME}:latest"
+                        sh 'docker logout'
                     }
                 }
             }
