@@ -66,9 +66,9 @@ pipeline {
                     export SPRING_DATASOURCE_PASSWORD='${DB_PASSWORD}'
                     export DB_USERNAME='${SPRING_DATASOURCE_USERNAME}'
                     export DB_PASSWORD='${DB_PASSWORD}'
-                    docker-compose down
-                    docker-compose pull
-                    docker-compose up -d
+                    docker compose down
+                    docker compose pull
+                    docker compose up -d
                 """
             }
         }
