@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     def image = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", 'docker-registry-credentials') {
+                        docker.withRegistry("", 'docker-registry-credentials') {
                         image.push()
                         image.push('latest')
                     }
