@@ -44,7 +44,7 @@ public class PaymentProcessingJob {
     @Autowired
     private PaymentService paymentService;
 
-    @Scheduled(fixedRate = 30000) // Every 30 seconds
+    @Scheduled(fixedRateString = "${payment.processing.interval}")
     public void processPendingPayments() {
         logger.info("Starting scheduled payment processing job");
 
@@ -58,7 +58,6 @@ public class PaymentProcessingJob {
                 logger.error("Failed to process payment {}: {}", payment.getTransactionId(), e.getMessage());
             }
         }
-
         logger.info("Scheduled payment processing job completed");
     }
 
@@ -120,7 +119,7 @@ public class PaymentProcessingJob {
             // Update flight available seats
             flightService.updateAvailableSeats(booking.getFlight().getId(), seatIds.size());
 
-            logger.info("Payment {} failed. Booking {} cancelled and seats released",
+            logger.error("Payment {} failed. Booking {} cancelled and seats released",
                     payment.getTransactionId(), booking.getBookingReference());
         } catch (Exception e) {
             logger.error("Error handling payment failure for payment {}: {}",

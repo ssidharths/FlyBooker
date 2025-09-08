@@ -8,6 +8,7 @@ import com.projects.flightbooking.repository.PaymentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,9 @@ import java.util.UUID;
 @Service
 public class PaymentService {
     private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
+
+    @Value("${payment.success.rate}")
+    private double paymentSuccessRate;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -82,7 +86,7 @@ public class PaymentService {
     }
 
     private boolean simulatePaymentProcessing() {
-        // Simulate 95% success rate
-        return Math.random() < 0.95;
+        // Simulate the given % success rate
+        return Math.random() < paymentSuccessRate;
     }
 }

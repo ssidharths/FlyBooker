@@ -95,7 +95,7 @@ public class BookingService {
             throw new RuntimeException("Booking not found");
         }
         Booking booking = bookingOpt.get();
-        logger.info("f::Cancel initiated for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
+        logger.info("::Cancel initiated for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
         booking.setStatus(BookingStatus.CANCELLED);
         // Release seats
         List<BookingSeat> bookingSeats = bookingSeatRepository.findByBookingId(booking.getId());
@@ -104,7 +104,7 @@ public class BookingService {
         // Update flight available seats
         flightService.updateAvailableSeats(booking.getFlight().getId(), seatIds.size());
         bookingRepository.save(booking);
-        logger.info("f::Cancel success for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
+        logger.info("::Cancel success for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
     }
 
     private BookingResponse convertToBookingResponse(Booking booking) {
