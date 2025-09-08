@@ -10,8 +10,8 @@ pipeline {
         DOCKER_REGISTRY = 'docker.io'
         IMAGE_NAME = 'g4rvr/flybooker'
         DB_PASSWORD = credentials('db-password')
-        SPRING_DATASOURCE_URL = 'jdbc:postgresql://postgres:5432/flybooker'
-        SPRING_DATASOURCE_USERNAME = 'postgres'
+        SPRING_DATASOURCE_URL = credentials('db-url')
+        SPRING_DATASOURCE_USERNAME = credentials('db-username')
     }
 
     stages {
@@ -59,9 +59,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                    export SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-                    export SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-                    export SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+                    export SPRING_DATASOURCE_URL='${DB_URL}'
+                    export SPRING_DATASOURCE_USERNAME='${DB_USERNAME}'
+                    export SPRING_DATASOURCE_PASSWORD='${DB_PASSWORD}'
+                    export DB_USERNAME='${DB_USERNAME}'
+                    export DB_PASSWORD='${DB_PASSWORD}'
                     docker-compose down
                     docker-compose pull
                     docker-compose up -d
