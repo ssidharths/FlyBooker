@@ -2,11 +2,14 @@ package com.projects.flightbooking.service;
 
 import com.projects.flightbooking.dto.seats.SeatResponse;
 import com.projects.flightbooking.entity.Seat;
+import com.projects.flightbooking.entity.enums.BookingStatus;
 import com.projects.flightbooking.entity.enums.SeatStatus;
+import com.projects.flightbooking.repository.BookingSeatRepository;
 import com.projects.flightbooking.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,6 +18,8 @@ import java.util.stream.Collectors;
 public class SeatService {
     @Autowired
     private SeatRepository seatRepository;
+    @Autowired
+    private BookingSeatRepository bookingSeatRepository;
 
     public List<SeatResponse> getSeatsForFlight(Long flightId) {
         List<Seat> seats = seatRepository.findByFlightIdOrderBySeatNumber(flightId);
@@ -36,9 +41,13 @@ public class SeatService {
 
 
     public boolean isSeatAvailable(Long seatId) {
-        Optional<Seat> seat = seatRepository.findByIdWithLock(seatId);
-        return seat.isPresent() && seat.get().getStatus() == SeatStatus.AVAILABLE;
+        // Check if seat has any active bookings (CONFIRMED or PENDING)
+        return !bookingSeatRepository.existsBySeatIdAndBookingStatusIn(
+                seatId,
+                Arrays.asList(BookingStatus.CONFIRMED, BookingStatus.PENDING)
+        );
     }
+
 
     public void reserveSeats(List<Long> seatIds) {
         List<Seat> seats = seatRepository.findAllById(seatIds);

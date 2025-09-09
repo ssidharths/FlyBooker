@@ -32,9 +32,6 @@ public class Seat {
     @JoinColumn(name = "flight_id", nullable = false)
     private Flight flight;
 
-    @OneToOne(mappedBy = "seat", cascade = CascadeType.ALL)
-    private BookingSeat bookingSeat;
-
     public Seat(String seatNumber, SeatClass seatClass, BigDecimal additionalFee, Flight flight) {
         this.seatNumber = seatNumber;
         this.seatClass = seatClass;

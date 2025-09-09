@@ -90,21 +90,33 @@ public class BookingService {
 
     @Transactional
     public void cancelBooking(String bookingReference) {
-        Optional<Booking> bookingOpt = bookingRepository.findByBookingReference(bookingReference);
-        if (bookingOpt.isEmpty()) {
-            throw new RuntimeException("Booking not found");
-        }
-        Booking booking = bookingOpt.get();
-        logger.info("::Cancel initiated for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
-        booking.setStatus(BookingStatus.CANCELLED);
-        // Release seats
+        Booking booking = bookingRepository.findByBookingReference(bookingReference)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        logger.info("::Cancel initiated for {} by {}::",
+                booking.getFlight().getFlightNumber(), booking.getPassengerEmail());
+
+        // Get seat IDs before deletion
         List<BookingSeat> bookingSeats = bookingSeatRepository.findByBookingId(booking.getId());
-        List<Long> seatIds = bookingSeats.stream().map(bs -> bs.getSeat().getId()).collect(Collectors.toList());
+        List<Long> seatIds = bookingSeats.stream()
+                .map(bs -> bs.getSeat().getId())
+                .collect(Collectors.toList());
+
+        // Delete BookingSeat records using custom query
+        bookingSeatRepository.deleteByBookingId(booking.getId());
+
+        // Release seats
         seatService.releaseSeats(seatIds);
+
         // Update flight available seats
         flightService.updateAvailableSeats(booking.getFlight().getId(), seatIds.size());
+
+        // Update booking status
+        booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
-        logger.info("::Cancel success for {} by {}::", booking.getFlight(), booking.getPassengerEmail());
+
+        logger.info("::Cancel success for {} by {}::",
+                booking.getFlight().getFlightNumber(), booking.getPassengerEmail());
     }
 
     private BookingResponse convertToBookingResponse(Booking booking) {
