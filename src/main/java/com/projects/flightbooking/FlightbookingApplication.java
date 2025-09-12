@@ -21,7 +21,7 @@ public class FlightbookingApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedOrigins("http://localhost:3000",
-                                "http://127.0.0.1:3000").allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                                "http://127.0.0.1:3000","https://flybooker.netlify.app/").allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*").allowCredentials(true);
             }
         };
