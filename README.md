@@ -31,6 +31,10 @@ git clone https://github.com/ssidharths/flybooker.git
 cd flybooker
 docker-compose up --build
 ```
+
+## Schedule Demo Data  
+https://gist.github.com/ssidharths/5c6ffbe3244951e296e2e1bb6035c541  
+
 ## 🖼️ Screenshots  
 
 ### Flight Search  
