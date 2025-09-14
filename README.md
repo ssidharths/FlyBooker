@@ -1,16 +1,33 @@
-# FlyBooker✈️
-Modular flight booking backend service implementing core features like :
-- ✈️Flight Search - Multi-criteria search with origin/destination, dates, passengers, and class selection
-- 📊Dynamic Results - Flight cards with pricing, and flight details
-- 💺Seat Selection - Interactive aircraft seat map with different seat types (economy, premium, occupied)
-- 💵Dynamic Pricing - Real-time price based on the demand
-- 🔄️Nested transactions to ensure consistency in payment + seat booking workflows
-- 🔒Row-level locks / concurrency control for safe seat reservations under high load
-- 🧩Modular monolith architecture 
+# FlyBooker ✈️
 
-# Tech Stack🚀
-- Spring Boot backend with separation-of-concerns architecture
-- PostgreSQL as the database 
-- Jenkins pipeline for CI/CD
-- React.js vibe coded front end with GLM 4.5 and Claude
-- Container-first setup with Docker & Docker Compose
+A modular flight booking backend built with **Spring Boot** and **PostgreSQL**, designed for consistency, scalability, and real-world airline reservation workflows.
+
+## Features
+- **Flight Search (✈️)** – Multi-criteria query by origin, destination, dates, passengers, and class.  
+- **Dynamic Results (📊)** – Flight cards with details and pricing.  
+- **Seat Selection (💺)** – Seat map with availability (economy, premium, etc).  
+- **Dynamic Pricing (💵)** – Demand-based real-time pricing.  
+- **Nested Transactions (🔄)** – Atomic workflows for payment + seat booking.  
+- **Concurrency Control (🔒)** – Row-level locks prevent double bookings.  
+- **Modular Monolith (🧩)** – Separation-of-concerns within a single deployable unit.  
+
+## Tech Stack
+- **Backend:** Spring Boot (Java 17)  
+- **Database:** PostgreSQL  
+- **CI/CD:** Jenkins  
+- **Frontend:** React.js (assisted with GLM 4.5 + Claude)  
+- **Deployment:** Docker + Docker Compose  
+
+## Getting Started
+
+### Prerequisites
+- Docker & Docker Compose  
+- Java 17+  
+- Node.js 18+ (optional frontend)  
+
+### Run
+```bash
+git clone https://github.com/your-username/flybooker.git
+cd flybooker
+docker-compose up --build
+```
