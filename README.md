@@ -12,5 +12,5 @@ Modular flight booking backend service implementing core features like :
 - Spring Boot backend with separation-of-concerns architecture
 - PostgreSQL as the database 
 - Jenkins pipeline for CI/CD
-- React.js vibe code with GLM 4.5 and Claude
+- React.js vibe coded front end with GLM 4.5 and Claude
 - Container-first setup with Docker & Docker Compose
