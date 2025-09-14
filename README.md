@@ -27,7 +27,7 @@ A modular flight booking backend built with **Spring Boot** and **PostgreSQL**, 
 
 ### Run
 ```bash
-git clone https://github.com/your-username/flybooker.git
+git clone https://github.com/ssidharths/flybooker.git
 cd flybooker
 docker-compose up --build
 ```
